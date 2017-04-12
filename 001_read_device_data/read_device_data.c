@@ -48,10 +48,11 @@ void memdump(const char *s, const int len)
 
 char calculate_checksum(char *s)
 {
-  int i, sum;
+  int i, sum = 0;
 
   for (i = 0; i < 7; i++)
     sum += *(s + i);
+
   return (char)(sum & 0xff);
 }
 
@@ -65,7 +66,6 @@ int main(int argc, char **argv)
   int bytes_sent;
   int bytes_recv;
 
-  int i;
   char buf[BUF_SIZE];
 
   struct timeval tv, select_tv;
@@ -95,10 +95,10 @@ int main(int argc, char **argv)
     exit(1);
   }
 
+  memset(&buf, 0, sizeof(buf));
+
   /* Prepare packet. */
   *buf = 0xbb;
-  for (i = 1; i < 7; i++)
-    *(buf + i) = 0;
 
   *(buf + 7) = calculate_checksum(buf);
 
